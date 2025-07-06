@@ -24,10 +24,26 @@
     1. python version 3.13.1
 
 ● Design decisions
-
+    1. Data structure
+    To manage the LRU Cache the below data structure are utilized
+        1. Queue : The queue structure of nodes help check which key was used the latest. The key at the end of the queue is the key that was not used recently. This helps with the elimination of the key from the cache.
+        2. Map: The map is used to access keys with O(1) time complexity. This help manage the access logic of the cache
+    
+    2. LRU Cache:
+        1. The class uses Thread lock and event to manage the concurrent use of the global variables and inter thread communication.
+        2. The Constructor method of the class starts a thread that periodically checks the timetamps of the keys in cache and removes the expired keys.
+        3. The clean up function makes sure that the daemon thread is joined to ensure proper thread management
+        4. The class also implements the LRU logic to handle the requirement of the cache.
+    
+    3. Stats class:
+        1. Simple class to store the statsitics requirement of the question and return the report when requested.
+    
+    4. Logger class:
+        1. Implements a simple static function to write to a log.txt file
 
 ● Concurrency model
-
+    Global locks are implmented to restrict use of resources like queue and map.
+    The Lock ensures code that code is thread safe.
 
 ● Eviction logic
 
@@ -48,5 +64,3 @@
     Random Test : {"hits": 1, "misses": 0, "hit_rate": 0.5, "total_requests": 2, "current_size": 5, "evictions": 0, "expired_removals": 0}
 
     Timestamp test : {"hits": 0, "misses": 1, "hit_rate": 0.0, "total_requests": 1, "current_size": 3, "evictions": 0, "expired_removals": 1}
-
-● Performance considerations
