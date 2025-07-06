@@ -1,120 +1,143 @@
-🧠 LRUCache — Thread-Safe Cache with TTL Support
-A thread-safe, TTL-enabled Least Recently Used (LRU) cache implementation in Python, supporting both object-based and context-managed usage patterns.
+# 🧠 LRUCache — Thread-Safe Cache with TTL Support
 
-🚀 How to Run the Code
-🧪 Run Unit Tests
-Run specific test modules:
+A thread-safe, TTL-enabled Least Recently Used (LRU) cache implementation in Python. Designed for concurrent workloads, it supports both object-oriented and context-managed usage.
 
-bash
-Copy
-Edit
+---
+
+## 🚀 How to Run the Code
+
+### 💡 Run Unit Tests
+
+```bash
 python -m unittest tests/concurr
 python -m unittest tests/arbitart
-🔧 Using the LRUCache
-1. Object-Based Instantiation
-python
-Copy
-Edit
+```
+
+### 🔧 Using the LRUCache
+
+#### 1. Object-Based Usage
+
+```python
 from models.LRUCache import LRUCache
 
 cache = LRUCache(max_size=4)
 
 cache.put("key1", "value1", ttl=60)
-value = cache.get("key1")
-stats = cache.get_stats()
+print(cache.get("key1"))
+print(cache.get_stats())
 cache.clear()
-cache.stop()  # IMPORTANT: Clean up background threads
-2. Context-Based Instantiation
-python
-Copy
-Edit
+cache.stop()  # Important for cleanup
+```
+
+#### 2. Context-Based Usage
+
+```python
 from models.LRUCache import LRUCache
 
 with LRUCache(max_size=4) as cache:
     cache.put("key2", "value2")
     print(cache.get("key2"))
 # `stop()` is automatically called on exit
-📦 Dependencies
-Python 3.13.1
+```
 
-Standard library only (no external packages required)
+---
 
-⚙️ Design Decisions
-📚 Data Structures
-Structure	Purpose
-deque	Maintains access order (LRU logic) — oldest key at front
-dict	Stores key-to-CacheItem mappings for O(1) lookups
+## 📦 Dependencies
 
-🧵 Concurrency Model
-Global threading.Lock ensures thread-safe access to queue and map.
+* Python **3.13.1**
+* No third-party libraries required
 
-Daemon background thread handles TTL-based key expiration.
+---
 
-Thread-safe statistics tracking via Stats class.
+## ⚙️ Design Overview
 
-♻️ Eviction Logic
-1. Size-Based Eviction
-If cache.size == capacity, the oldest key (from front of queue) is removed.
+### 📖 Data Structures
 
-2. TTL-Based Eviction
-Each item has a ttl (in seconds).
+| Structure | Purpose                            |
+| --------- | ---------------------------------- |
+| `deque`   | Maintains access order (LRU logic) |
+| `dict`    | Provides O(1) key-value access     |
 
-The background thread runs periodically to remove items where:
+### 🤜 Concurrency Model
 
-python
-Copy
-Edit
-item.ttl < current_timestamp
-📊 Components Overview
-🧠 LRUCache Class
-Method	Description
-put(key, value, ttl=100)	Insert/update a key with optional TTL
-get(key)	Retrieve value if key exists and not expired
-clear()	Clears all items from cache
-get_stats()	Returns current stats as JSON
-stop()	Stops TTL cleanup thread (call manually unless using with)
+* Global `threading.Lock` ensures safe access to shared structures
+* Background daemon thread handles TTL-based cleanup
+* Graceful shutdown via `stop()` or context manager
 
-📈 Stats Class
+### ♻️ Eviction Logic
+
+#### 1. Size-Based
+
+* When max size is reached, the oldest key is evicted (front of the queue)
+
+#### 2. TTL-Based
+
+* Keys expire after `ttl` seconds
+* Background thread removes expired entries every second
+
+---
+
+## 📊 Components
+
+### 🔬 LRUCache API
+
+| Method                     | Description                                     |
+| -------------------------- | ----------------------------------------------- |
+| `put(key, value, ttl=100)` | Inserts or updates a key with optional TTL      |
+| `get(key)`                 | Retrieves value if key exists and isn't expired |
+| `clear()`                  | Clears the cache                                |
+| `get_stats()`              | Returns a JSON string of stats                  |
+| `stop()`                   | Terminates the TTL cleanup thread               |
+
+### 📉 Stats Class
+
 Tracks:
 
-hits, misses, hit_rate
+* Hits / Misses
+* Hit rate
+* Total requests
+* Current size
+* Evictions / Expired removals
 
-total_requests, current_size
+### 📝 Logger Class
 
-evictions, expired_removals
+Logs messages to `log.txt`:
 
-🪵 Logger Class
-Logs events to a log.txt file via a static method:
+```python
+Logger.log("your message")
+```
 
-python
-Copy
-Edit
-Logger.log("your message here")
-🧪 Sample Stats Output
-Test	Output
-Concurrent Access	{"hits": 500, "misses": 0, "hit_rate": 0.5, "total_requests": 1000, "current_size": 500, "evictions": 0, "expired_removals": 0}
-Random Access	{"hits": 1, "misses": 0, "hit_rate": 0.5, "total_requests": 2, "current_size": 5, "evictions": 0, "expired_removals": 0}
-Timestamp Expiry	{"hits": 0, "misses": 1, "hit_rate": 0.0, "total_requests": 1, "current_size": 3, "evictions": 0, "expired_removals": 1}
+---
 
-🧼 Cleanup Reminder
-Always call stop() after use to cleanly shut down the TTL thread:
+## 📊 Sample Stats Output
 
-python
-Copy
-Edit
+| Test Case         | Output                                                                                                                              |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Concurrent Access | `{ "hits": 500, "misses": 0, "hit_rate": 0.5, "total_requests": 1000, "current_size": 500, "evictions": 0, "expired_removals": 0 }` |
+| Random Access     | `{ "hits": 1, "misses": 0, "hit_rate": 0.5, "total_requests": 2, "current_size": 5, "evictions": 0, "expired_removals": 0 }`        |
+| Timestamp Expiry  | `{ "hits": 0, "misses": 1, "hit_rate": 0.0, "total_requests": 1, "current_size": 3, "evictions": 0, "expired_removals": 1 }`        |
+
+---
+
+## 🚨 Cleanup Reminder
+
+Always call `stop()` to terminate the TTL thread if not using a `with` block.
+
+```python
 cache.stop()
-OR use the with context block for auto-cleanup:
+```
 
-python
-Copy
-Edit
-with LRUCache(4) as cache:
-    ...
-💡 Future Enhancements (Optional)
-Switch to OrderedDict for simpler LRU management
+---
 
-TTL cleanup on-demand during get() calls
+## 💡 Future Enhancements
 
-Fine-grained locking using read-write locks
+* Use `OrderedDict` for simplified LRU logic
+* TTL eviction on-demand during `get()`
+* Read-write lock support for more parallelism
+* Persistent caching support
 
-Persistent storage for cache values
+---
+
+## 🌐 License
+
+MIT License. Use freely, but don't forget to credit if reused in production systems!
