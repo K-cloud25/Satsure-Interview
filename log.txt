@@ -1,0 +1,66 @@
+[2025-07-06 17:47:04] : INFO : init
+[2025-07-06 17:47:04] : INFO : TTL check thread started
+[2025-07-06 17:47:04] : INFO : cache destroyed
+[2025-07-06 17:47:04] : INFO : Clear Keys : []
+[2025-07-06 17:53:22] : INFO : init
+[2025-07-06 17:53:22] : INFO : TTL check thread started
+[2025-07-06 17:53:22] : INFO : cache destroyed
+[2025-07-06 17:53:22] : INFO : Clear Keys : []
+[2025-07-06 17:57:06] : INFO : init
+[2025-07-06 17:57:06] : INFO : TTL check thread started
+[2025-07-06 17:57:06] : INFO : Context Based Init
+[2025-07-06 17:57:06] : INFO : Ending Stats : {"hits": 1, "misses": 0, "hit_rate": 0.5, "total_requests": 2, "current_size": 5, "evictions": 0, "expired_removals": 0}
+[2025-07-06 17:57:06] : INFO : Clear Keys : []
+[2025-07-06 17:57:06] : INFO : cache destroyed
+[2025-07-06 17:59:42] : INFO : init
+[2025-07-06 17:59:42] : INFO : TTL check thread started
+[2025-07-06 17:59:42] : INFO : Context Based Init
+[2025-07-06 17:59:42] : INFO : Clear Keys : []
+[2025-07-06 17:59:42] : INFO : Ending Stats : {"hits": 1, "misses": 0, "hit_rate": 0.5, "total_requests": 2, "current_size": 5, "evictions": 0, "expired_removals": 0}
+[2025-07-06 17:59:42] : INFO : cache destroyed
+[2025-07-06 18:00:32] : INFO : init
+[2025-07-06 18:00:32] : INFO : TTL check thread started
+[2025-07-06 18:00:32] : INFO : Context Based Init
+[2025-07-06 18:00:32] : INFO : Clear Keys : []
+[2025-07-06 18:00:32] : Error : -1 != '-1'
+[2025-07-06 18:00:32] : INFO : Ending Stats : {"hits": 1, "misses": 1, "hit_rate": 0.167, "total_requests": 6, "current_size": 3, "evictions": 1, "expired_removals": 0}
+[2025-07-06 18:00:32] : INFO : cache destroyed
+[2025-07-06 18:05:29] : INFO : init
+[2025-07-06 18:05:29] : INFO : TTL check thread started
+[2025-07-06 18:05:29] : INFO : Context Based Init
+[2025-07-06 18:05:29] : INFO : Ending Stats : {"hits": 1, "misses": 0, "hit_rate": 1.0, "total_requests": 1, "current_size": 5, "evictions": 0, "expired_removals": 0}
+[2025-07-06 18:05:29] : INFO : Clear Keys : []
+[2025-07-06 18:05:29] : INFO : cache destroyed
+[2025-07-06 18:05:39] : INFO : init
+[2025-07-06 18:05:39] : INFO : Context Based Init
+[2025-07-06 18:05:39] : INFO : TTL check thread started
+[2025-07-06 18:05:39] : INFO : Clear Keys : []
+[2025-07-06 18:05:39] : INFO : Ending Stats : {"hits": 1, "misses": 1, "hit_rate": 0.5, "total_requests": 2, "current_size": 3, "evictions": 1, "expired_removals": 0}
+[2025-07-06 18:05:39] : INFO : cache destroyed
+[2025-07-06 18:05:49] : INFO : init
+[2025-07-06 18:05:49] : INFO : TTL check thread started
+[2025-07-06 18:05:49] : INFO : Context Based Init
+[2025-07-06 18:05:49] : INFO : Clear Keys : []
+[2025-07-06 18:05:59] : Error : LRUCache.get() takes 2 positional arguments but 3 were given
+[2025-07-06 18:05:59] : INFO : Clear Keys : ['key1']
+[2025-07-06 18:05:59] : INFO : Ending Stats : {"hits": 0, "misses": 0, "hit_rate": 0.0, "total_requests": 0, "current_size": 3, "evictions": 0, "expired_removals": 1}
+[2025-07-06 18:05:59] : INFO : cache destroyed
+[2025-07-06 18:09:08] : INFO : init
+[2025-07-06 18:09:08] : INFO : TTL check thread started
+[2025-07-06 18:09:08] : INFO : Context Based Init
+[2025-07-06 18:09:08] : INFO : Clear Keys : []
+[2025-07-06 18:09:08] : INFO : Ending Stats : {"hits": 1, "misses": 0, "hit_rate": 1.0, "total_requests": 1, "current_size": 5, "evictions": 0, "expired_removals": 0}
+[2025-07-06 18:09:08] : INFO : cache destroyed
+[2025-07-06 18:09:18] : INFO : init
+[2025-07-06 18:09:18] : INFO : TTL check thread started
+[2025-07-06 18:09:18] : INFO : Context Based Init
+[2025-07-06 18:09:18] : INFO : Ending Stats : {"hits": 1, "misses": 1, "hit_rate": 0.5, "total_requests": 2, "current_size": 3, "evictions": 1, "expired_removals": 0}
+[2025-07-06 18:09:18] : INFO : Clear Keys : []
+[2025-07-06 18:09:18] : INFO : cache destroyed
+[2025-07-06 18:09:28] : INFO : init
+[2025-07-06 18:09:28] : INFO : Context Based Init
+[2025-07-06 18:09:28] : INFO : TTL check thread started
+[2025-07-06 18:09:28] : INFO : Clear Keys : []
+[2025-07-06 18:09:38] : INFO : Clear Keys : ['key1']
+[2025-07-06 18:09:38] : INFO : Ending Stats : {"hits": 0, "misses": 1, "hit_rate": 0.0, "total_requests": 1, "current_size": 3, "evictions": 0, "expired_removals": 1}
+[2025-07-06 18:09:38] : INFO : cache destroyed
