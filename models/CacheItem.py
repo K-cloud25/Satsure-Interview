@@ -6,7 +6,7 @@ class CacheItem:
         self.value = value
         self.ttl = ttl + int ( datetime.now().timestamp() )
     
-    def getValue(self) -> str:
+    def getValue(self):
         return self.value
         
         

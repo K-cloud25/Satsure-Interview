@@ -35,12 +35,16 @@ class LRUCache:
         Logger.log("Ending Stats : " + self.stat.get_stats())
         self.stop()
 
-    def get(self, key) -> str:
+    def get(self, key:str):
+        
+        if ( len(key.strip()) == 0  ):
+            raise ValueError("Key Cannot be Empty")
+        
         self.stat.updateRequest()
         with self.lock:
             if key not in self.map:
                 self.stat.updateMiss()
-                return "-1"
+                return -1
             else:
                 self.stat.updateHits()
                 try:
@@ -53,6 +57,9 @@ class LRUCache:
                 return self.map[key].getValue()
 
     def put(self, key, value, ttl=100):
+        
+        if ( len(key.strip()) == 0  ):
+            raise ValueError("Key Cannot be Empty")
         with self.lock:
             if key in self.map:
                 try:

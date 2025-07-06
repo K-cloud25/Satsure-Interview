@@ -1,66 +1,120 @@
-● How to run the code (with commands for setup and execution)
-    1. CMD to run test
-        `python -m unittest tests/concurr`
-        `python -m unittest tests/arbitart`
-    2. To run Cache for other cases
-        1. Object Instantiate Method
-            1. Import LRUCache from models
-            2. Object should be instantaite with max size for cache
-            3. method:  
-                obj.put(key:str, value:str, ttl=100)
-                obj.get(key:str) -> str
-                obj.clear()
-                obj.get_stats()->str
-            4. Post use *PLEASE* use the stop function for clean up 
-                obj.stop()
+🧠 LRUCache — Thread-Safe Cache with TTL Support
+A thread-safe, TTL-enabled Least Recently Used (LRU) cache implementation in Python, supporting both object-based and context-managed usage patterns.
 
-        2. Context Based Instantation Method
-            1. Import LRUCache from models
-            2. cache object can be used with context based method
-                `with LRUCache(4) as cache:`
-            3. In this case no requirement to call stop function as it is called implicity after code block exit        
+🚀 How to Run the Code
+🧪 Run Unit Tests
+Run specific test modules:
 
-● Dependencies
-    1. python version 3.13.1
+bash
+Copy
+Edit
+python -m unittest tests/concurr
+python -m unittest tests/arbitart
+🔧 Using the LRUCache
+1. Object-Based Instantiation
+python
+Copy
+Edit
+from models.LRUCache import LRUCache
 
-● Design decisions
-    1. Data structure
-    To manage the LRU Cache the below data structure are utilized
-        1. Queue : The queue structure of nodes help check which key was used the latest. The key at the end of the queue is the key that was not used recently. This helps with the elimination of the key from the cache.
-        2. Map: The map is used to access keys with O(1) time complexity. This help manage the access logic of the cache
-    
-    2. LRU Cache:
-        1. The class uses Thread lock and event to manage the concurrent use of the global variables and inter thread communication.
-        2. The Constructor method of the class starts a thread that periodically checks the timetamps of the keys in cache and removes the expired keys.
-        3. The clean up function makes sure that the daemon thread is joined to ensure proper thread management
-        4. The class also implements the LRU logic to handle the requirement of the cache.
-    
-    3. Stats class:
-        1. Simple class to store the statsitics requirement of the question and return the report when requested.
-    
-    4. Logger class:
-        1. Implements a simple static function to write to a log.txt file
+cache = LRUCache(max_size=4)
 
-● Concurrency model
-    Global locks are implmented to restrict use of resources like queue and map.
-    The Lock ensures code that code is thread safe.
+cache.put("key1", "value1", ttl=60)
+value = cache.get("key1")
+stats = cache.get_stats()
+cache.clear()
+cache.stop()  # IMPORTANT: Clean up background threads
+2. Context-Based Instantiation
+python
+Copy
+Edit
+from models.LRUCache import LRUCache
 
-● Eviction logic
+with LRUCache(max_size=4) as cache:
+    cache.put("key2", "value2")
+    print(cache.get("key2"))
+# `stop()` is automatically called on exit
+📦 Dependencies
+Python 3.13.1
 
-1. Due to Size
-    1. If the max size of LRUCache is about to exceed
-    2. The older key from the queue is popped and removed from the cache
-    3. The `dequeue` helps manage the latest key accessed and map help with O(1) access of keys
+Standard library only (no external packages required)
 
-2. Due to expired TTL
-    1. By Default each key is given a TTL of 100 seconds
-    2. The TTL is set according to current timestamp + given ttl
-    3. The background daemon thread check the list of current keys and compares the timestamp with the current timestamp value
-    4. A sublist of keys is created from total list of keys which pass eviction condition of `if item.ttl < current_ts` 
+⚙️ Design Decisions
+📚 Data Structures
+Structure	Purpose
+deque	Maintains access order (LRU logic) — oldest key at front
+dict	Stores key-to-CacheItem mappings for O(1) lookups
 
-● Sample stats output 
-    Concur Test: {"hits": 500, "misses": 0, "hit_rate": 0.5, "total_requests": 1000, "current_size": 500, "evictions": 0, "expired_removals": 0}
+🧵 Concurrency Model
+Global threading.Lock ensures thread-safe access to queue and map.
 
-    Random Test : {"hits": 1, "misses": 0, "hit_rate": 0.5, "total_requests": 2, "current_size": 5, "evictions": 0, "expired_removals": 0}
+Daemon background thread handles TTL-based key expiration.
 
-    Timestamp test : {"hits": 0, "misses": 1, "hit_rate": 0.0, "total_requests": 1, "current_size": 3, "evictions": 0, "expired_removals": 1}
+Thread-safe statistics tracking via Stats class.
+
+♻️ Eviction Logic
+1. Size-Based Eviction
+If cache.size == capacity, the oldest key (from front of queue) is removed.
+
+2. TTL-Based Eviction
+Each item has a ttl (in seconds).
+
+The background thread runs periodically to remove items where:
+
+python
+Copy
+Edit
+item.ttl < current_timestamp
+📊 Components Overview
+🧠 LRUCache Class
+Method	Description
+put(key, value, ttl=100)	Insert/update a key with optional TTL
+get(key)	Retrieve value if key exists and not expired
+clear()	Clears all items from cache
+get_stats()	Returns current stats as JSON
+stop()	Stops TTL cleanup thread (call manually unless using with)
+
+📈 Stats Class
+Tracks:
+
+hits, misses, hit_rate
+
+total_requests, current_size
+
+evictions, expired_removals
+
+🪵 Logger Class
+Logs events to a log.txt file via a static method:
+
+python
+Copy
+Edit
+Logger.log("your message here")
+🧪 Sample Stats Output
+Test	Output
+Concurrent Access	{"hits": 500, "misses": 0, "hit_rate": 0.5, "total_requests": 1000, "current_size": 500, "evictions": 0, "expired_removals": 0}
+Random Access	{"hits": 1, "misses": 0, "hit_rate": 0.5, "total_requests": 2, "current_size": 5, "evictions": 0, "expired_removals": 0}
+Timestamp Expiry	{"hits": 0, "misses": 1, "hit_rate": 0.0, "total_requests": 1, "current_size": 3, "evictions": 0, "expired_removals": 1}
+
+🧼 Cleanup Reminder
+Always call stop() after use to cleanly shut down the TTL thread:
+
+python
+Copy
+Edit
+cache.stop()
+OR use the with context block for auto-cleanup:
+
+python
+Copy
+Edit
+with LRUCache(4) as cache:
+    ...
+💡 Future Enhancements (Optional)
+Switch to OrderedDict for simpler LRU management
+
+TTL cleanup on-demand during get() calls
+
+Fine-grained locking using read-write locks
+
+Persistent storage for cache values
